@@ -3,7 +3,7 @@
 set -e
 
 # Run conformance test
-export KUBECONFIG=$(PWD)/kismatic/generated/kubeconfig
+export KUBECONFIG=$PWD/kismatic/generated/kubeconfig
 export KUBERNETES_CONFORMANCE_TEST=y
 export KUBERNETES_PROVIDER=skeleton
 
