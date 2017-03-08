@@ -8,7 +8,7 @@ export KUBERNETES_CONFORMANCE_TEST=y
 export KUBERNETES_PROVIDER=skeleton
 
 # Run all conformance tests
-CWD=$(PWD)
+CWD=$PWD
 cd $GOPATH/src/k8s.io/kubernetes
 go run hack/e2e.go -v --test --test_args="--ginkgo.focus=\[Conformance\]"
 
