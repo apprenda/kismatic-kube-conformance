@@ -36,7 +36,7 @@ kubectl:
 ginkgo:
 	go get github.com/onsi/ginkgo/ginkgo
 	mkdir -p kubernetes/_output/bin
-	cp $(shell go env GOPATH)/bin/ginkgo/ kubernetes/_output/bin/ginkgo
+	cp $(shell go env GOPATH)/bin/ginkgo kubernetes/_output/bin/ginkgo
 
 clean-kubernetes:
 	rm -rf kubernetes
