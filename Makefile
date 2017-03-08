@@ -12,7 +12,7 @@ run-conformance: build-cluster kubernetes build-tests kubectl ginkgo
 build-cluster: kismatic
 	cd kismatic && \
 		./provision aws create -e 1 -m 1 -w 4 && \
-		./kismatic install apply
+		./kismatic install apply --verbose
 
 kismatic: 
 	mkdir -p kismatic
