@@ -1,12 +1,14 @@
 KUBERNETES_VERSION=v1.5.3
 GOOS=$(shell go env GOOS)
+GOPATH=$(shell go env GOPATH)
+KUBERNETES_SRC=$(GOPATH)/src/k8s.io/kubernetes
 KET_LINK=https://kismatic-installer.s3-accelerate.amazonaws.com/latest/kismatic.tar.gz
 
 ifeq ($(GOOS), darwin)
 	KET_LINK = https://kismatic-installer.s3-accelerate.amazonaws.com/latest-darwin/kismatic.tar.gz
 endif
 
-run-conformance: build-cluster kubernetes build-tests kubectl ginkgo
+run-conformance: kubernetes build-tests kubectl ginkgo build-cluster
 	./run-conformance.sh
 
 build-cluster: kismatic
@@ -25,20 +27,19 @@ clean-kismatic:
 
 kubernetes:
 	git clone https://github.com/kubernetes/kubernetes
-	cd kubernetes && git checkout $(KUBERNETES_VERSION)
+	mkdir -p $(GOPATH)/src/k8s.io
+	mv kubernetes $(KUBERNETES_SRC)
+	cd $(KUBERNETES_SRC) && git checkout $(KUBERNETES_VERSION)
 
 build-tests:
-	cd kubernetes && make WHAT=test/e2e/e2e.test
+	cd $(KUBERNETES_SRC) && make WHAT=test/e2e/e2e.test
 
 kubectl:
-	cd kubernetes && make WHAT=cmd/kubectl
+	cd $(KUBERNETES_SRC) && make WHAT=cmd/kubectl
 
 ginkgo:
 	go get github.com/onsi/ginkgo/ginkgo
-	mkdir -p kubernetes/_output/bin
-	cp $(shell go env GOPATH)/bin/ginkgo kubernetes/_output/bin/ginkgo
+	mkdir -p $(KUBERNETES_SRC)/_output/bin
+	cp $(shell go env GOPATH)/bin/ginkgo $(KUBERNETES_SRC)/_output/bin/ginkgo
 
-clean-kubernetes:
-	rm -rf kubernetes
-
-clean: clean-kismatic clean-kubernetes
+clean: clean-kismatic
